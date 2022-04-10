@@ -1,0 +1,1 @@
+Script/Programa creada para la automatización en la creación de contactos y tratos en la plataforma de Active Campaign a través de un input de un txt con perfiles de Instagram 
