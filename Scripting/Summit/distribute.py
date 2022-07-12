@@ -16,7 +16,7 @@ def distribute_people_in_companies():
         for row in csvreader:
             scores_array = [row[1],row[2],row[3],row[4]]
             company_column = get_max_in_vector(scores_array)
-            companies[company_column-1].append(row) # Entra en la lista
+            companies[company_column-1].append(row)
 
         flag = ( (len(amazon) == 25) and (len(google) == 25) and (len(intel) == 25) and (len(apple) == 25))
         while (not flag):
@@ -30,7 +30,7 @@ def distribute_people_in_companies():
                     auxiliar_element[get_max_in_vector(auxiliar_element_values_array)] = 0
                     auxiliar_element_values_array = [auxiliar_element[1],auxiliar_element[2],auxiliar_element[3],auxiliar_element[4]]
                     company_column = get_max_in_vector(auxiliar_element_values_array)
-                    companies[company_column-1].append(auxiliar_element) # Entra en la lista
+                    companies[company_column-1].append(auxiliar_element)
 
             flag = ( (len(amazon) == 25) and (len(google) == 25) and (len(intel) == 25) and (len(apple) == 25))
 
