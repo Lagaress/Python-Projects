@@ -6,7 +6,7 @@ def get_random_name():
     return names.get_full_name()
 
 def get_random_number():
-    return random.randint(1 , 100)
+    return random.randint(1 , 99)
 
 def get_vector4_random_number():
     return [get_random_number(), get_random_number(), get_random_number() , get_random_number()]
