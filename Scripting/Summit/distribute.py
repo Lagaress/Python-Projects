@@ -1,58 +1,73 @@
 import csv
 
-# Amazon[1],Google[2],Intel[3],Apple[4]
-
 def distribute_people_in_companies():
+    try:
+        make_distribution()
+        
+    except Exception as e: 
+        print("There was an exception during execution: "+e)    
 
-    amazon = []
-    google = []
-    intel = []
-    apple = []
-    companies = [amazon,google,intel,apple]
+def make_distribution():
+    companies = [[],[],[],[]]
 
     with open('data.csv','r') as csvfile:   
         csvreader = csv.reader(csvfile)     
         next(csvreader)
-        for row in csvreader:
-            scores_array = [row[1],row[2],row[3],row[4]]
-            company_column = get_max_in_vector(scores_array)
-            companies[company_column-1].append(row)
-
-        flag = ( (len(amazon) == 25) and (len(google) == 25) and (len(intel) == 25) and (len(apple) == 25))
-        while (not flag):
-            counter = 1
-            for company in companies: 
-                order_array(company, counter)
-                counter += 1 
-                while len(company) > 25:
-                    auxiliar_element = company.pop()
-                    auxiliar_element_values_array = [auxiliar_element[1],auxiliar_element[2],auxiliar_element[3],auxiliar_element[4]]
-                    auxiliar_element[get_max_in_vector(auxiliar_element_values_array)] = 0
-                    auxiliar_element_values_array = [auxiliar_element[1],auxiliar_element[2],auxiliar_element[3],auxiliar_element[4]]
-                    company_column = get_max_in_vector(auxiliar_element_values_array)
-                    companies[company_column-1].append(auxiliar_element)
-
-            flag = ( (len(amazon) == 25) and (len(google) == 25) and (len(intel) == 25) and (len(apple) == 25))
-
+        fill_companies_array(csvreader,companies)
+        rebalance_arrays(companies)
         create_output_csv(companies)
 
+
+def fill_companies_array(csvreader,companies):
+    for row in csvreader:
+        scores_array = [row[1],row[2],row[3],row[4]]
+        company_column = get_index_max_element_in_vector(scores_array)
+        companies[company_column-1].append(row)
+
+def are_all_arrays_full(companies):
+    return ((len(companies[0]) == 25) and (len(companies[1]) == 25) and (len(companies[2]) == 25) and (len(companies[3]) == 25))
+
+def rebalance_arrays(companies):
+    while (not are_all_arrays_full(companies)):
+        counter = 1
+        sort_companies(companies, counter)
+
+def sort_companies(companies, counter):
+    for company in companies: 
+        order_array(company, counter)
+        counter += 1 
+        reorder_people_in_companies(companies, company)
+
+def reorder_people_in_companies(companies, company):
+    while len(company) > 25:
+        last_element = company.pop()
+        last_element_values_array = [last_element[1],last_element[2],last_element[3],last_element[4]]
+        last_element[get_index_max_element_in_vector(last_element_values_array)] = 0
+        last_element_values_array = [last_element[1],last_element[2],last_element[3],last_element[4]]
+        company_column = get_index_max_element_in_vector(last_element_values_array)
+        companies[company_column-1].append(last_element)
+
+
 def create_output_csv(initial_array):
-    headers = ['Amazon','Google','Intel','Apple']
-    
     with open('output.csv','w') as csvfile:
         writer = csv.writer(csvfile)
-        writer.writerow(headers)
-        
-        for iterator in range(len(initial_array[0])):
-            amazon_element = str(initial_array[0][iterator][0])+" ("+str(initial_array[0][iterator][1])+")"
-            google_element = str(initial_array[1][iterator][0])+" ("+str(initial_array[1][iterator][2])+")"
-            intel_element = str(initial_array[2][iterator][0])+" ("+str(initial_array[2][iterator][3])+")"
-            apple_element = str(initial_array[3][iterator][0])+" ("+str(initial_array[3][iterator][4])+")"
+        write_headers_output_csv(writer)
+        write_rows_output_csv(initial_array, writer)
 
-            row = [amazon_element,google_element,intel_element,apple_element]
+def write_headers_output_csv(writer):
+    headers = ['Amazon','Google','Intel','Apple']
+    writer.writerow(headers)
 
-            writer.writerow(row)
+def write_rows_output_csv(initial_array , writer):
+    for iterator in range(len(initial_array[0])):
+        amazon_element = str(initial_array[0][iterator][0])+" ("+str(initial_array[0][iterator][1])+")"
+        google_element = str(initial_array[1][iterator][0])+" ("+str(initial_array[1][iterator][2])+")"
+        intel_element = str(initial_array[2][iterator][0])+" ("+str(initial_array[2][iterator][3])+")"
+        apple_element = str(initial_array[3][iterator][0])+" ("+str(initial_array[3][iterator][4])+")"
 
+        row = [amazon_element,google_element,intel_element,apple_element]
+
+        writer.writerow(row)
 
 
 def order_array(arr, element_number):
@@ -67,8 +82,7 @@ def order_array(arr, element_number):
         if not swapped:
             return
 
-
-def get_max_in_vector(scores_array):
+def get_index_max_element_in_vector(scores_array):
     max_value = 0
     interaction_counter = 1
     element_counter = 1

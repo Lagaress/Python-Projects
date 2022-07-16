@@ -18,10 +18,12 @@ def create_csv():
     with open('data.csv','w') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(headers)
-        
-        for row in range(100):
-            vector_random_number = get_vector4_random_number()
-            writer.writerow([get_random_name(),vector_random_number[0],vector_random_number[1],vector_random_number[2],vector_random_number[3]])
+        fill_rows(writer)
+
+def fill_rows(writer):
+    for row in range(100):
+        vector_random_number = get_vector4_random_number()
+        writer.writerow([get_random_name(),vector_random_number[0],vector_random_number[1],vector_random_number[2],vector_random_number[3]])
 
 def create_csv_if_not_exist():
     if (not os.path.exists('data.csv')):
